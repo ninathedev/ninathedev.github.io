@@ -16,7 +16,7 @@ function draw() {
   // Color a random number of pixels with random colors
   for (let y = 0; y < height*25; y++) {
     for (let x = 0; x < width; x++) {
-      if (random(1) < 0.001) { // Randomly color some pixels
+      if (random(1) < 0.003) { // Randomly color some pixels
         const index = getIndex(x, y);
         pixels[index] = random(1, 255); // Random Red
         pixels[index + 1] = random(1, 255); // Random Green
