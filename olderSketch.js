@@ -71,3 +71,9 @@ function getNonBlackNeighbors(x, y) {
   });
   return neighbors;
 }
+
+function mousePressed() {
+  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height && mouseButton === LEFT) {
+    saveCanvas('myCanvas', 'png');
+  }
+}
