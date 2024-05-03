@@ -3,7 +3,7 @@ function setup() {
   background(0); // Start with a black background
 }
 let counter = 0;
-const stop = 1;
+const stop = 100;
 function draw() {
   if (counter++ > stop) {
     noLoop();
@@ -20,6 +20,7 @@ function draw() {
         pixels[index] = random(1, 255); // Random Red
         pixels[index + 1] = random(1, 255); // Random Green
         pixels[index + 2] = random(1, 255); // Random Blue
+        updatePixels();
       }
     }
   }
@@ -29,20 +30,21 @@ function draw() {
     for (let x = 0; x < width; x++) {
       const index = getIndex(x, y);
       let neighbors = getNonBlackNeighbors(x, y);
-        if (neighbors.length > 0) {
-          // Choose a random non-black neighbor
-          let stuff = Math.floor(Math.random() * neighbors.length);
-          stuff = stuff >= neighbors.length ? stuff - 1 : stuff;
-          let chosenIndex = neighbors[stuff];
-          // Apply the chosen neighbor's color to the current pixel
-          pixels[index] = pixels[chosenIndex];
-          pixels[index + 1] = pixels[chosenIndex + 1];
-          pixels[index + 2] = pixels[chosenIndex + 2];
-          // Alpha (pixels[index + 3]) is left unchanged
-        }
+      if (neighbors.length > 0) {
+        // Choose a random non-black neighbor
+        let stuff = Math.floor(Math.random() * neighbors.length);
+        stuff = stuff >= neighbors.length ? stuff - 1 : stuff;
+        let chosenIndex = neighbors[stuff];
+        // Apply the chosen neighbor's color to the current pixel
+        pixels[index] = pixels[chosenIndex];
+        pixels[index + 1] = pixels[chosenIndex + 1];
+        pixels[index + 2] = pixels[chosenIndex + 2];
+        // Alpha (pixels[index + 3]) is left unchanged
+        updatePixels();
+      }
     }
   }
-  updatePixels();
+  //updatePixels();
 }
 
 function getIndex(x, y) {
