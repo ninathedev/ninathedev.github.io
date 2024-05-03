@@ -79,8 +79,8 @@ function mouseClicked() {
     board[selectedPiece.getPosition()[0]][selectedPiece.getPosition()[1]] = null;
     selectedPiece.move([row, col]);
     board[row][col] = selectedPiece;
-    console.table(board);
     selectedPiece = null;
+    doBestMove();
   }
 
   if (selectedPiece !== null) {
@@ -90,4 +90,169 @@ function mouseClicked() {
       selectedPiece = null;
     }
   }
+}
+
+const scoring = {
+  0: 20, // pawn
+  1: 50, // rook
+  2: 100, // knight
+  3: 50, // bishop
+  4: 1000, // queen
+  5: 10000 // king
+};
+
+function doBestMove(isMaximizing = false) {
+  const bestMove = getBestMove(board, 5, true); // Set isMaximizing to true for black
+  if (bestMove === null) return;
+  const [start, end] = bestMove;
+  board[end[0]][end[1]] = board[start[0]][start[1]];
+  board[start[0]][start[1]] = null;
+  
+  // Check if the king is in danger after the move
+  const kingPosition = findKingPosition(board, !isMaximizing);
+  const isKingInDanger = isSquareAttacked(kingPosition, board, isMaximizing);
+  
+  if (isKingInDanger) {
+    // If the king is in danger, undo the move and try another one
+    board[start[0]][start[1]] = board[end[0]][end[1]];
+    board[end[0]][end[1]] = null;
+    doBestMove();
+  }
+}
+
+function findKingPosition(board, isWhite) {
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const piece = board[row][col];
+      if (piece !== null && piece.type === 5 && piece.isWhite === isWhite) {
+        return [row, col];
+      }
+    }
+  }
+  return null;
+}
+
+function isSquareAttacked(position, board, isAttackingWhite) {
+  const [row, col] = position;
+  
+  // Check if any opponent piece can attack the square
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      const piece = board[i][j];
+      if (piece !== null && piece.isWhite !== isAttackingWhite) {
+        const moves = piece.getAvailableMoves(board);
+        for (const move of moves) {
+          if (move[0] === row && move[1] === col) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+  
+  return false;
+}
+
+
+function getBestMove(board, depth, isMaximizing) {
+  const moves = getAllMoves(board, isMaximizing);
+  let bestMove = null;
+  let bestScore = isMaximizing ? -Infinity : Infinity;
+
+  for (const move of moves) {
+    const [start, end] = move;
+    const piece = board[start[0]][start[1]];
+    const oldPiece = board[end[0]][end[1]];
+
+    board[end[0]][end[1]] = piece;
+    board[start[0]][start[1]] = null;
+
+    const score = minimax(board, depth - 1, !isMaximizing, -Infinity, Infinity);
+
+    board[end[0]][end[1]] = oldPiece;
+    board[start[0]][start[1]] = piece;
+
+    if (isMaximizing) {
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = move;
+      }
+    } else {
+      if (score < bestScore) {
+        bestScore = score;
+        bestMove = move;
+      }
+    }
+  }
+
+  return bestMove;
+}
+
+function minimax(board, depth, isMaximizing, alpha, beta) {
+  if (depth === 0) {
+    return evaluateBoard(board, isMaximizing);
+  }
+
+  const moves = getAllMoves(board, isMaximizing);
+  let bestScore = isMaximizing ? -Infinity : Infinity;
+
+  for (const move of moves) {
+    const [start, end] = move;
+    const piece = board[start[0]][start[1]];
+    const oldPiece = board[end[0]][end[1]];
+
+    board[end[0]][end[1]] = piece;
+    board[start[0]][start[1]] = null;
+
+    const score = minimax(board, depth - 1, !isMaximizing, alpha, beta);
+
+    board[end[0]][end[1]] = oldPiece;
+    board[start[0]][start[1]] = piece;
+
+    if (isMaximizing) {
+      bestScore = max(bestScore, score);
+      alpha = max(alpha, score);
+    } else {
+      bestScore = min(bestScore, score);
+      beta = min(beta, score);
+    }
+
+    if (beta <= alpha) {
+      break;
+    }
+  }
+
+  return bestScore;
+}
+
+function evaluateBoard(board, isMaximizing) {
+  let score = 0;
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const piece = board[row][col];
+      if (piece === null) continue;
+      const pieceScore = scoring[piece.type];
+      score += piece.isWhite === isMaximizing ? pieceScore : -pieceScore;
+    }
+  }
+
+  return score;
+}
+
+function getAllMoves(board, isMaximizing) {
+  const moves = [];
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const piece = board[row][col];
+      if (piece === null || piece.isWhite !== isMaximizing) continue;
+      const availableMoves = piece.getAvailableMoves(board);
+      for (const move of availableMoves) {
+        moves.push([[row, col], move]);
+      }
+    }
+  }
+
+  return moves;
 }
