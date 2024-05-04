@@ -20,7 +20,6 @@ function draw() {
         pixels[index] = random(1, 255); // Random Red
         pixels[index + 1] = random(1, 255); // Random Green
         pixels[index + 2] = random(1, 255); // Random Blue
-        updatePixels();
       }
     }
   }
@@ -40,11 +39,10 @@ function draw() {
         pixels[index + 1] = pixels[chosenIndex + 1];
         pixels[index + 2] = pixels[chosenIndex + 2];
         // Alpha (pixels[index + 3]) is left unchanged
-        updatePixels();
       }
     }
   }
-  //updatePixels();
+  updatePixels();
 }
 
 function getIndex(x, y) {
