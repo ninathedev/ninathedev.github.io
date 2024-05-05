@@ -256,7 +256,6 @@ class Piece {
   }
 
   simulateMove(board, from, to) {
-    const no = board[from[0]][from[1]];
     const newBoard = board.slice();
     const [fromRow, fromCol] = from;
     const [toRow, toCol] = to;
@@ -265,9 +264,6 @@ class Piece {
     newBoard[fromRow][fromCol] = null;
     newBoard[toRow][toCol] = piece;
     piece.position = [toRow, toCol];
-    board[toRow][toCol] = null;
-    if (no.type !== 5) board[toRow][toCol] = no;
-    board[fromRow][fromCol] = piece;
     return newBoard;
   }
 
