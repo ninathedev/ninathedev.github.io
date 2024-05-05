@@ -246,9 +246,7 @@ class Piece {
           if (r >= 0 && r < 8 && c >= 0 && c < 8 && (board[r][c] === null || board[r][c].isWhite !== this.isWhite)) {
             // Check if the move puts the king in check
             const newBoard = this.simulateMove(board, [row, col], [r, c]);
-            if (!this.isKingChecked(newBoard, this.isWhite)) {
-              availableMoves.push([r, c]);
-            }
+            if (!this.isKingChecked(newBoard, this.isWhite)) availableMoves.push([r, c]);
           }
         }
         break;
@@ -258,7 +256,7 @@ class Piece {
   }
 
   simulateMove(board, from, to) {
-    const newBoard = JSON.parse(JSON.stringify(board));
+    const newBoard = {...board};
     const [fromRow, fromCol] = from;
     const [toRow, toCol] = to;
     const piece = newBoard[fromRow][fromCol];
@@ -267,6 +265,7 @@ class Piece {
     newBoard[toRow][toCol] = piece;
     piece.position = [toRow, toCol];
     return newBoard;
+    
   }
 
   move(newPosition) {

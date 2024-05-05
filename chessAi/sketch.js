@@ -121,18 +121,18 @@ function findKingPosition(board, isWhite) {
 }
 
 // Helper function to check if the king is in check
-function isKingInCheck(kingPosition, board) {
+function isKingInCheck(kingPosition, board2) {
   if (kingPosition === null) return false;
 
   const [kingRow, kingCol] = kingPosition;
-  const opponentColor = !board[kingRow][kingCol].isWhite;
+  const opponentColor = !board2[kingRow][kingCol].isWhite;
 
   // Check if any opponent piece can attack the king
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
-      const piece = board[row][col];
+      const piece = board2[row][col];
       if (piece !== null && piece.isWhite === opponentColor) {
-        const moves = piece.getAvailableMoves(board);
+        const moves = piece.getAvailableMoves(board2);
         for (const move of moves) {
           if (move[0] === kingRow && move[1] === kingCol) {
             return true;
