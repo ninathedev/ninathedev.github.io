@@ -256,7 +256,8 @@ class Piece {
   }
 
   simulateMove(board, from, to) {
-    const newBoard = {...board};
+    const no = board[from[0]][from[1]];
+    const newBoard = board.slice();
     const [fromRow, fromCol] = from;
     const [toRow, toCol] = to;
     const piece = newBoard[fromRow][fromCol];
@@ -264,8 +265,10 @@ class Piece {
     newBoard[fromRow][fromCol] = null;
     newBoard[toRow][toCol] = piece;
     piece.position = [toRow, toCol];
+    board[toRow][toCol] = null;
+    if (no.type !== 5) board[toRow][toCol] = no;
+    board[fromRow][fromCol] = piece;
     return newBoard;
-    
   }
 
   move(newPosition) {
@@ -290,8 +293,7 @@ class Piece {
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
         const piece = board[i][j];
-        if (piece && piece.isWhite !== isWhite) {
-          // error: piece.getAvailableMoves is not a function
+        if (piece && piece.isWhite !== isWhite && piece.type !== 5) {
           const availableMoves = piece.getAvailableMoves(board, false);
           for (const move of availableMoves) {
             if (move[0] === kingPosition[0] && move[1] === kingPosition[1]) {
