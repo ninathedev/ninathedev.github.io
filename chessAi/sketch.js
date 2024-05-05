@@ -87,7 +87,7 @@ function mouseClicked() {
   const clickedPiece = board[row][col];
 
   if (selectedPiece === null && clickedPiece !== null) {
-    selectedPiece = clickedPiece;
+    if (clickedPiece.isWhite === false) selectedPiece = clickedPiece;
   }
 
   if (selectedPiece !== null && selectedPiece.getAvailableMoves(board).some(move => move[0] === row && move[1] === col)) {

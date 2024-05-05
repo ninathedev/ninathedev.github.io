@@ -10,10 +10,6 @@ class Piece {
     return types[this.type];
   }
 
-  getIsWhite() {
-    return this.isWhite;
-  }
-
   move(newPosition) {
     if (this.getType() === "pawn" && (newPosition[0] === 0 || newPosition[0] === 7)) this.type = 4;
     this.position = newPosition;
@@ -51,7 +47,7 @@ class Piece {
         if (col < 7 && board[row + direction][col + 1] !== null && board[row + direction][col + 1].isWhite !== this.isWhite) {
           availableMoves.push([row + direction, col + 1]);
         }
-      break;
+        break;
 
       case "rook":
         // Horizontal moves
@@ -248,14 +244,30 @@ class Piece {
         ];
         for (const [r, c] of kingMoves) {
           if (r >= 0 && r < 8 && c >= 0 && c < 8 && (board[r][c] === null || board[r][c].isWhite !== this.isWhite)) {
-            availableMoves.push([r, c]);
+            // Check if the move puts the king in check
+            const newBoard = this.simulateMove(board, [row, col], [r, c]);
+            if (!this.isKingChecked(newBoard, this.isWhite)) {
+              availableMoves.push([r, c]);
+            }
           }
         }
         break;
     }
 
     return availableMoves;
-}
+  }
+
+  simulateMove(board, from, to) {
+    const newBoard = JSON.parse(JSON.stringify(board));
+    const [fromRow, fromCol] = from;
+    const [toRow, toCol] = to;
+    const piece = newBoard[fromRow][fromCol];
+    if (piece === null) return newBoard;
+    newBoard[fromRow][fromCol] = null;
+    newBoard[toRow][toCol] = piece;
+    piece.position = [toRow, toCol];
+    return newBoard;
+  }
 
   move(newPosition) {
     this.position = newPosition;
@@ -267,7 +279,7 @@ class Piece {
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
         const piece = board[i][j];
-        if (piece && piece.getType() === "king" && piece.getIsWhite() === isWhite) {
+        if (piece && piece.type === 5 && piece.isWhite === isWhite) {
           kingPosition = [i, j];
           break;
         }
@@ -279,8 +291,9 @@ class Piece {
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
         const piece = board[i][j];
-        if (piece && piece.getIsWhite() !== isWhite) {
-          const availableMoves = piece.getAvailableMoves(board, null);
+        if (piece && piece.isWhite !== isWhite) {
+          // error: piece.getAvailableMoves is not a function
+          const availableMoves = piece.getAvailableMoves(board, false);
           for (const move of availableMoves) {
             if (move[0] === kingPosition[0] && move[1] === kingPosition[1]) {
               return true; // King is checked
