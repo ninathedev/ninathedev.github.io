@@ -24,6 +24,7 @@ class Piece {
   getAvailableMoves(board, isSimulated) {
     isSimulated = isSimulated || false;
     const availableMoves = [];
+    const availMoves = [];
     const [row, col] = this.position;
 
     switch (this.getType()) {
@@ -251,15 +252,28 @@ class Piece {
                 // Check if the move puts the king in check
                 const newBoard = this.simulateMove(board, [row, col], [r, c]);
                 if (!this.isKingChecked(newBoard, this.isWhite)) {
-                  availableMoves.push([r, c]);
+                  availMoves.push([r, c]);
                 }
-              } else availableMoves.push([r, c]);
+              } else availMoves.push([r, c]);
             }
           }
         }
         break;
     }
-    return availableMoves;
+
+    // Filter out moves that put the king in check
+    if (!isSimulated) {
+      for (const move of availableMoves) {
+        const newBoard = this.simulateMove(board, [row, col], move);
+        if (!this.isKingChecked(newBoard, this.isWhite)) {
+          availMoves.push(move);
+        }
+      }
+    } else {
+      return availableMoves;
+    }
+
+    return availMoves;
   }
 
   clone() {

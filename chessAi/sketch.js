@@ -172,7 +172,7 @@ function doBestMove(board) {
           board[i][j] = null;
           piece.move([newI, newJ]);
           // Calculate the board score
-          const score = minimax(board, 3, false);
+          const score = minimax(board, 1, false);
           // Undo the move
           board[i][j] = piece;
           piece.move([i, j]);
