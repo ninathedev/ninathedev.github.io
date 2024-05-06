@@ -66,12 +66,12 @@ function draw() {
   // Check if the king is in check
   const kingPosition = findKingPosition(board, true);
   const kingPosition2 = findKingPosition(board, false);
-  if (isKingInCheck(kingPosition, board)) {
+  if (isKingInCheck(kingPosition, board, true)) {
     const [row, col] = kingPosition;
     fill(255, 0, 0, 100);
     rect(col * squareSize, row * squareSize, squareSize, squareSize);
   }
-  if (isKingInCheck(kingPosition2, board)) {
+  if (isKingInCheck(kingPosition2, board, false)) {
     const [row, col] = kingPosition;
     fill(255, 0, 0, 100);
     rect(col * squareSize, row * squareSize, squareSize, squareSize);
@@ -121,11 +121,11 @@ function findKingPosition(board, isWhite) {
 }
 
 // Helper function to check if the king is in check
-function isKingInCheck(kingPosition, board2) {
+function isKingInCheck(kingPosition, board2, isWhite) {
   if (kingPosition === null) return false;
 
   const [kingRow, kingCol] = kingPosition;
-  const opponentColor = !board2[kingRow][kingCol].isWhite;
+  const opponentColor = !board2[kingRow][kingCol].isWhite ? !board2[kingRow][kingCol].isWhite : findKingPosition(board2, isWhite);
 
   // Check if any opponent piece can attack the king
   for (let row = 0; row < 8; row++) {
