@@ -64,15 +64,9 @@ function draw() {
   }
 
   // Check if the king is in check
-  const kingPosition = findKingPosition(board, true);
   const kingPosition2 = findKingPosition(board, false);
-  if (isKingInCheck(kingPosition, board, true)) {
-    const [row, col] = kingPosition;
-    fill(255, 0, 0, 100);
-    rect(col * squareSize, row * squareSize, squareSize, squareSize);
-  }
   if (isKingInCheck(kingPosition2, board, false)) {
-    const [row, col] = kingPosition;
+    const [row, col] = kingPosition2;
     fill(255, 0, 0, 100);
     rect(col * squareSize, row * squareSize, squareSize, squareSize);
   }
@@ -95,7 +89,7 @@ function mouseClicked() {
     selectedPiece.move([row, col]);
     board[row][col] = selectedPiece;
     selectedPiece = null;
-    doBestMove();
+    //doBestMove();
   }
 
   if (selectedPiece !== null) {

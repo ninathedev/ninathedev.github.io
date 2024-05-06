@@ -19,7 +19,8 @@ class Piece {
     return this.position;
   }
 
-  getAvailableMoves(board, check) {
+  getAvailableMoves(board, check, isSimulated) {
+    isSimulated = isSimulated || false;
     check = check || null;
     const availableMoves = [];
     const [row, col] = this.position;
@@ -242,28 +243,42 @@ class Piece {
           [row, col - 1], [row, col + 1],
           [row + 1, col - 1], [row + 1, col], [row + 1, col + 1]
         ];
-        for (let [r, c] of kingMoves) {
+        for (const [r, c] of kingMoves) {
           if (r >= 0 && r < 8 && c >= 0 && c < 8 && (board[r][c] === null || board[r][c].isWhite !== this.isWhite)) {
-            // Check if the move puts the king in check
-            const newBoard = this.simulateMove(board, [row, col], [r, c]);
-            if (!this.isKingChecked(newBoard, this.isWhite)) availableMoves.push([r, c]);
+            if (r >= 0 && r < 8 && c >= 0 && c < 8 && (board[r][c] === null || board[r][c].isWhite !== this.isWhite)) {
+              if (!isSimulated) {
+                // Check if the move puts the king in check
+                const newBoard = this.simulateMove(board, [row, col], [r, c]);
+                if (!this.isKingChecked(newBoard, this.isWhite)) {
+                  availableMoves.push([r, c]);
+                }
+              } else {
+                availableMoves.push([r, c]);
+              }
+            }
           }
         }
         break;
     }
-
     return availableMoves;
   }
 
   simulateMove(board, from, to) {
+    // Create a deep copy of the board
     const newBoard = board.slice();
-    const [fromRow, fromCol] = from;
-    const [toRow, toCol] = to;
-    const piece = newBoard[fromRow][fromCol];
-    if (piece === null) return newBoard;
-    newBoard[fromRow][fromCol] = null;
-    newBoard[toRow][toCol] = piece;
-    piece.position = [toRow, toCol];
+
+    // Get the piece at the 'from' position
+    const piece = newBoard[from[0]][from[1]];
+    console.table(newBoard);
+
+    // Move the piece to the 'to' position
+    if (piece.getAvailableMoves(board, false, true).some(move => move[0] === to[0] && move[1] === to[1])) {
+      newBoard[to[0]][to[1]] = piece;
+      newBoard[from[0]][from[1]] = null;
+    }
+
+    // Update the position of the moved piece
+    piece.move(to);
     return newBoard;
   }
 
@@ -274,15 +289,15 @@ class Piece {
   isKingChecked(board, isWhite) {
     // Find the position of the king
     let kingPosition;
-    for (let i = 0; i < 8; i++) {
-      for (let j = 0; j < 8; j++) {
-        const piece = board[i][j];
-        if (piece && piece.type === 5 && piece.isWhite === isWhite) {
-          kingPosition = [i, j];
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const piece = board[row][col];
+        if (piece == null) continue;
+        if (piece.isWhite == isWhite && piece.type == 5) {
+          kingPosition = [row, col];
           break;
         }
       }
-      if (kingPosition) break;
     }
   
     // Check if any opponent's piece threatens the king
@@ -290,7 +305,7 @@ class Piece {
       for (let j = 0; j < 8; j++) {
         const piece = board[i][j];
         if (piece && piece.isWhite !== isWhite && piece.type !== 5) {
-          const availableMoves = piece.getAvailableMoves(board, false);
+          const availableMoves = piece.getAvailableMoves(board, false, true);
           for (const move of availableMoves) {
             if (move[0] === kingPosition[0] && move[1] === kingPosition[1]) {
               return true; // King is checked
@@ -302,4 +317,5 @@ class Piece {
   
     return false; // King is not checked
   }
+  
 }
