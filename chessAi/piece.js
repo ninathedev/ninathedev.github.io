@@ -245,9 +245,8 @@ class Piece {
         for (let [r, c] of kingMoves) {
           if (r >= 0 && r < 8 && c >= 0 && c < 8 && (board[r][c] === null || board[r][c].isWhite !== this.isWhite)) {
             // Check if the move puts the king in check
-            let newBoard = this.simulateMove(board, [row, col], [r, c]);
+            const newBoard = this.simulateMove(board, [row, col], [r, c]);
             if (!this.isKingChecked(newBoard, this.isWhite)) availableMoves.push([r, c]);
-            newBoard = undefined;
           }
         }
         break;
