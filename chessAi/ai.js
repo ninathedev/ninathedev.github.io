@@ -1,3 +1,12 @@
+const scores = {
+  pawn: 1,
+  knight: 3,
+  bishop: 3,
+  rook: 5,
+  queen: 9,
+  king: 1000
+}
+
 function getBestMove(board) {
   // Returns the best move for the AI.
   // returns an array [piece, [row, col]]
@@ -17,8 +26,11 @@ function getBestMove(board) {
   const piece = pieces[Math.floor(Math.random() * pieces.length)];
   if (!piece) return null;
   else {
-    const moves = piece.getAvailableMoves(board);
-    const move = moves[Math.floor(Math.random() * moves.length)];
-    return [piece, move];
+    // minimax: board, depth, isMaximizing
+    return minimax(board, 3, false);
   }
+}
+
+function minimax(board, depth, isMaximizing) {
+
 }
