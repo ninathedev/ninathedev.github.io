@@ -5,7 +5,7 @@ const scores = {
   rook: 5,
   queen: 9,
   king: 1000
-}
+};
 
 function getBestMove(board) {
   // Returns the best move for the AI.
@@ -26,11 +26,29 @@ function getBestMove(board) {
   const piece = pieces[Math.floor(Math.random() * pieces.length)];
   if (!piece) return null;
   else {
-    // minimax: board, depth, isMaximizing
-    return minimax(board, 3, false);
+    const moves = piece.getAvailableMoves(board);
+    const move = moves[Math.floor(Math.random() * moves.length)];
+    return [piece, move];
   }
 }
 
-function minimax(board, depth, isMaximizing) {
+function getAllAvailableMoves(board, isWhite) {
+  const moves = [];
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const piece = board[row][col];
+      if (piece !== null && piece.isWhite === isWhite) {
+        const availableMoves = piece.getAvailableMoves(board);
+        availableMoves.forEach(move => {
+          moves.push([piece, move]);
+        });
+      }
+    }
+  }
+  return moves;
+}
 
+function minimax(board, depth, isMaximizing) {
+  const allAvailableMoves = getAllAvailableMoves(board, !isMaximizing);
+  
 }

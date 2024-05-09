@@ -247,7 +247,7 @@ class Piece {
         ];
         for (const [r, c] of kingMoves) {
           if (r >= 0 && r < 8 && c >= 0 && c < 8 && (board[r][c] === null || board[r][c].isWhite !== this.isWhite)) {
-            availMoves.push([r, c]);
+            availableMoves.push([r, c]);
           }
         }
         break;
