@@ -25,36 +25,37 @@ function getAllAvailableMoves(board, isWhite) {
 }
 
 function minimax(board, depth, isMaximizing) {
-  if (depth === 0) return scoreBoard(board, isMaximizing);
+  if (depth === 0) return [0, 0, scoreBoard(board, isMaximizing)];
   
   const allAvailableMoves = getAllAvailableMoves(board, isMaximizing);
-  const testBoard = Piece.copyBoard(board);
-
   if (isMaximizing) {
     let bestScore = -Infinity;
     let moves = [];
     for (let move of allAvailableMoves) {
+      const testBoard = Piece.copyBoard(board);
       const [piece, [row, col]] = move;
       testBoard[piece.getPosition()[0]][piece.getPosition()[1]] = null;
       piece.move([row, col]);
       testBoard[row][col] = piece;
-      moves.push([piece, [row, col], minimax(testBoard, depth - 1, isMaximizing)]);
-      if (minimax(testBoard, depth - 1, isMaximizing) > bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing);
+      console.log(minimax(testBoard, depth - 1, isMaximizing));
+      moves.push([piece, [row, col], minimax(testBoard, depth - 1, isMaximizing)[2]]);
+      if (minimax(testBoard, depth - 1, isMaximizing)[2] > bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing);
     }
 
     for (let i = 0; i < moves.length; i++) {
-      if (moves[i][2] === bestScore) return [moves[i][0], moves[i][1]];
+      if (moves[i][2] === bestScore) return moves[i];
     }
   } else {
     let bestScore = Infinity;
     let moves = [];
     for (let move of allAvailableMoves) {
+      const testBoard = Piece.copyBoard(board);
       const [piece, [row, col]] = move;
       testBoard[piece.getPosition()[0]][piece.getPosition()[1]] = null;
       piece.move([row, col]);
       testBoard[row][col] = piece;
-      moves.push([piece, [row, col], minimax(testBoard, depth - 1, isMaximizing)]);
-      if (minimax(testBoard, depth - 1, isMaximizing) < bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing);
+      moves.push([piece, [row, col], minimax(testBoard, depth - 1, isMaximizing)[2]]);
+      if (minimax(testBoard, depth - 1, isMaximizing)[2] < bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing);
     }
 
     for (let i = 0; i < moves.length; i++) {
