@@ -10,13 +10,6 @@ class Piece {
     return types[this.type];
   }
 
-  move(newPosition) {
-    if (this.type === 0 && (newPosition[0] === 0 || newPosition[0] === 7)) {
-      this.type = 4;
-    }
-    this.position = newPosition;
-  }
-
   getPosition() {
     return this.position;
   }

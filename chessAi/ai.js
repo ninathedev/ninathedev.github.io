@@ -36,7 +36,7 @@ function getAllAvailableMoves(board, isWhite) {
 function minimax(board, depth, isMaximizing) {
   if (depth === 0) return scoreBoard(board, isMaximizing);
   
-  const allAvailableMoves = getAllAvailableMoves(board, !isMaximizing);
+  const allAvailableMoves = getAllAvailableMoves(board, isMaximizing);
   const testBoard = Piece.copyBoard(board);
 
   if (isMaximizing) {
@@ -78,7 +78,7 @@ function scoreBoard(board, isMaximizing) {
     for (let col = 0; col < 8; col++) {
       const piece = board[row][col];
       if (piece !== null) {
-        if (piece.isWhite === !isMaximizing) score += scores[piece.getType()];
+        if (piece.isWhite === isMaximizing) score += scores[piece.getType()];
         else score -= scores[piece.type];
       }
     }
