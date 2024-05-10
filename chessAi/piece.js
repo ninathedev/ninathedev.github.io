@@ -30,6 +30,7 @@ class Piece {
     switch (this.getType()) {
       case "pawn":
         const direction = !this.isWhite ? -1 : 1; // Direction depends on the pawn's color
+        if (row+direction < 0 || row+direction > 7) break; // Prevent out of bounds error
         // Check if the square in front of the pawn is empty
         if (board[row + direction][col] == null) {
           availableMoves.push([row + direction, col]);
@@ -331,7 +332,7 @@ class Piece {
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
         const piece = board[row][col];
-        if (piece == null) continue;
+        if (piece === null) continue;
         if (piece.isWhite == isWhite && piece.type == 5) {
           kingPosition = [row, col];
           break;
