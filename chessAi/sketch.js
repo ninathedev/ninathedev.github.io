@@ -99,8 +99,17 @@ function mouseClicked() {
       board[piece.getPosition()[0]][piece.getPosition()[1]] = null;
       piece.move(move);
       board[move[0]][move[1]] = piece;
+
+      // check if a pawn has reached the end of the board
+      if (piece.type === 0 && (move[0] === 0 || move[0] === 7)) {
+        piece.type = 4;
+      }
+
+      if (getAllAvailableMoves(board, true).length === 0) {
+        document.getElementById("msg").innerHTML = "You lost!";
+      }
     } else {
-      document.getElementById("msg").innerHTML = "Checkmate!";
+      document.getElementById("msg").innerHTML = "You win!";
     }
   }
 

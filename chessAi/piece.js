@@ -287,6 +287,21 @@ class Piece {
     return newBoard;
   }
 
+  static copyBoard(board) {
+    let newBoard = [];
+
+    for (let i in board) {
+      let newRow = [];
+      for (let j in board[i]) {
+        if (board[i][j] === null) newRow.push(null);
+        else newRow.push(board[i][j].clone());
+      }
+      newBoard.push(newRow);
+    }
+
+    return newBoard;
+  }
+
   simulateMove(board, from, to) {
     // Create a deep copy of the board
     const newBoard = this.copyBoard(board);
