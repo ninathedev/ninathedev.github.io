@@ -3,8 +3,8 @@ const scores = {
   knight: 3,
   bishop: 3,
   rook: 5,
-  queen: 9,
-  king: 1000
+  queen: 1000,
+  king: 100000
 };
 
 function getBestMove(board) {

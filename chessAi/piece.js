@@ -30,9 +30,8 @@ class Piece {
     switch (this.getType()) {
       case "pawn":
         const direction = !this.isWhite ? -1 : 1; // Direction depends on the pawn's color
-
         // Check if the square in front of the pawn is empty
-        if (board[row + direction][col] === null) {
+        if (board[row + direction][col] == null) {
           availableMoves.push([row + direction, col]);
 
           // Pawns can move two squares forward on their first move
@@ -308,6 +307,8 @@ class Piece {
 
     // Get the piece at the 'from' position
     const piece = newBoard[from[0]][from[1]];
+
+    if (!piece) return newBoard;
 
     // Move the piece to the 'to' position
     if (piece.getAvailableMoves(board, true).some(move => move[0] === to[0] && move[1] === to[1])) {
