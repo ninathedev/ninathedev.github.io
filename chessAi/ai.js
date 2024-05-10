@@ -7,15 +7,6 @@ const scores = {
   king: 100000
 };
 
-function getBestMove(board) {
-  // Returns the best move for the AI.
-  // returns an array [piece, [row, col]]
-  // where piece is the piece object to move
-  // and [row, col] is the new position of the piece
-
-  return minimax(board, 2, true);
-}
-
 function getAllAvailableMoves(board, isWhite) {
   const moves = [];
   for (let row = 0; row < 8; row++) {
