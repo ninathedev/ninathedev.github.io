@@ -26,7 +26,7 @@ function getAllAvailableMoves(board, isWhite) {
 
 function minimax(board, depth, isMaximizing) {
   if (depth === 0) return [0, 0, scoreBoard(board, isMaximizing)];
-  
+
   const allAvailableMoves = getAllAvailableMoves(board, isMaximizing);
   if (isMaximizing) {
     let bestScore = -Infinity;
@@ -37,9 +37,8 @@ function minimax(board, depth, isMaximizing) {
       testBoard[piece.getPosition()[0]][piece.getPosition()[1]] = null;
       piece.move([row, col]);
       testBoard[row][col] = piece;
-      console.log(minimax(testBoard, depth - 1, isMaximizing));
       moves.push([piece, [row, col], minimax(testBoard, depth - 1, isMaximizing)[2]]);
-      if (minimax(testBoard, depth - 1, isMaximizing)[2] > bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing);
+      if (minimax(testBoard, depth - 1, isMaximizing)[2] > bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing)[2];
     }
 
     for (let i = 0; i < moves.length; i++) {
@@ -55,11 +54,11 @@ function minimax(board, depth, isMaximizing) {
       piece.move([row, col]);
       testBoard[row][col] = piece;
       moves.push([piece, [row, col], minimax(testBoard, depth - 1, isMaximizing)[2]]);
-      if (minimax(testBoard, depth - 1, isMaximizing)[2] < bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing);
+      if (minimax(testBoard, depth - 1, isMaximizing)[2] < bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing)[2];
     }
 
     for (let i = 0; i < moves.length; i++) {
-      if (moves[i][2] === bestScore) return [moves[i][0], moves[i][1]];
+      if (moves[i][2] === bestScore) return moves[i];
     }
   }
 }
@@ -71,7 +70,7 @@ function scoreBoard(board, isMaximizing) {
       const piece = board[row][col];
       if (piece !== null) {
         if (piece.isWhite === isMaximizing) score += scores[piece.getType()];
-        else score -= scores[piece.type];
+        else score -= scores[piece.getType()];
       }
     }
   }

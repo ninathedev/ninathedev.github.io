@@ -94,7 +94,8 @@ function mouseClicked() {
     board[row][col] = selectedPiece;
     selectedPiece = null;
     const best = minimax(board, 2, true);
-    if (!best) {
+    console.table(best);
+    if (best) {
       const [piece, move] = best;
       board[piece.getPosition()[0]][piece.getPosition()[1]] = null;
       piece.move(move);
