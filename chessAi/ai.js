@@ -4,7 +4,7 @@ const scores = {
   bishop: 3,
   rook: 5,
   queen: 1000,
-  king: 100000
+  king: 0
 };
 
 function getAllAvailableMoves(board, isWhite) {
@@ -34,9 +34,9 @@ function minimax(board, depth, isMaximizing) {
     for (let move of allAvailableMoves) {
       const testBoard = Piece.copyBoard(board);
       const [piece, [row, col]] = move;
-      testBoard[piece.getPosition()[0]][piece.getPosition()[1]] = null;
       piece.move([row, col]);
       testBoard[row][col] = piece;
+      testBoard[piece.getPosition()[0]][piece.getPosition()[1]] = null;
       moves.push([piece, [row, col], minimax(testBoard, depth - 1, isMaximizing)[2]]);
       if (minimax(testBoard, depth - 1, isMaximizing)[2] > bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing)[2];
     }
@@ -50,9 +50,9 @@ function minimax(board, depth, isMaximizing) {
     for (let move of allAvailableMoves) {
       const testBoard = Piece.copyBoard(board);
       const [piece, [row, col]] = move;
-      testBoard[piece.getPosition()[0]][piece.getPosition()[1]] = null;
       piece.move([row, col]);
       testBoard[row][col] = piece;
+      testBoard[piece.getPosition()[0]][piece.getPosition()[1]] = null;
       moves.push([piece, [row, col], minimax(testBoard, depth - 1, isMaximizing)[2]]);
       if (minimax(testBoard, depth - 1, isMaximizing)[2] < bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing)[2];
     }
