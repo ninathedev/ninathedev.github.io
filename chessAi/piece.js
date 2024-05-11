@@ -37,10 +37,10 @@ class Piece {
         }
 
         // Check for possible captures diagonally
-        if (col > 0 && board[row + direction][col - 1] !== null && board[row + direction][col - 1].isWhite !== this.isWhite) {
+        if (col > 0 && col - 1 > 0 && board[row + direction][col - 1] !== null && board[row + direction][col - 1].isWhite !== this.isWhite) {
           availableMoves.push([row + direction, col - 1]);
         }
-        if (col < 7 && board[row + direction][col + 1] !== null && board[row + direction][col + 1].isWhite !== this.isWhite) {
+        if (col < 7 && col + 1 < 8 && board[row + direction][col + 1] !== null && board[row + direction][col + 1].isWhite !== this.isWhite) {
           availableMoves.push([row + direction, col + 1]);
         }
         break;
@@ -268,10 +268,10 @@ class Piece {
   copyBoard(board) {
     let newBoard = [];
 
-    for (let i in board) {
+    for (let i = 0; i < board.length; i++) {
       let newRow = [];
-      for (let j in board[i]) {
-        if (board[i][j] === null) newRow.push(null);
+      for (let j = 0; j < board[i].length; j++) {
+        if (board[i][j] == null) newRow.push(null);
         else newRow.push(board[i][j].clone());
       }
       newBoard.push(newRow);
