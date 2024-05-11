@@ -97,9 +97,9 @@ function mouseClicked() {
     console.table(best);
     if (best) {
       const [piece, move] = best;
+      board[piece.getPosition()[0]][piece.getPosition()[1]] = null;
       piece.move(move);
       board[move[0]][move[1]] = piece;
-      board[piece.getPosition()[0]][piece.getPosition()[1]] = null;
 
       // check if a pawn has reached the end of the board
       if (piece.type === 0 && (move[0] === 0 || move[0] === 7)) {
