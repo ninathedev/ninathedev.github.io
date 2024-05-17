@@ -7,6 +7,30 @@ const scores = {
   king: 0
 };
 
+function getBestMove(board, depth, isWhite) {
+  const moves = getAllAvailableMoves(board, isWhite);
+  let bestMove = null;
+  let bestScore = -Infinity;
+  for (const move of moves) {
+    const [piece, [row, col]] = move;
+    const oldPiece = board[row][col];
+    board[row][col] = piece;
+    board[piece.row][piece.col] = null;
+    piece.row = row;
+    piece.col = col;
+    const score = minimax(board, depth - 1, false);
+    if (score > bestScore) {
+      bestScore = score;
+      bestMove = move;
+    }
+    board[row][col] = oldPiece;
+    board[piece.row][piece.col] = piece;
+    piece.row = piece.row;
+    piece.col = piece.col;
+  }
+  return bestMove;
+}
+
 function getAllAvailableMoves(board, isWhite) {
   const moves = [];
   for (let row = 0; row < 8; row++) {
@@ -25,39 +49,43 @@ function getAllAvailableMoves(board, isWhite) {
 }
 
 function minimax(board, depth, isMaximizing) {
-  if (depth === 0) return [0, 0, scoreBoard(board, isMaximizing)];
+  if (depth === 0) return scoreBoard(board, isMaximizing);
 
-  const allAvailableMoves = getAllAvailableMoves(board, isMaximizing);
+  const moves = getAllAvailableMoves(board, isMaximizing);
   if (isMaximizing) {
     let bestScore = -Infinity;
-    let moves = [];
-    for (let move of allAvailableMoves) {
-      const testBoard = Piece.copyBoard(board);
+    for (const move of moves) {
       const [piece, [row, col]] = move;
-      testBoard[piece.getPosition()[0]][piece.getPosition()[1]] = null;
-      testBoard[row][col] = piece.clone().move([row, col]);
-      moves.push([piece, [row, col], minimax(testBoard, depth - 1, isMaximizing)[2]]);
-      if (minimax(testBoard, depth - 1, isMaximizing)[2] > bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing)[2];
+      const oldPiece = board[row][col];
+      board[row][col] = piece;
+      board[piece.row][piece.col] = null;
+      piece.row = row;
+      piece.col = col;
+      const score = minimax(board, depth - 1, false);
+      bestScore = Math.max(score, bestScore);
+      board[row][col] = oldPiece;
+      board[piece.row][piece.col] = piece;
+      piece.row = piece.row;
+      piece.col = piece.col;
     }
-
-    for (let i = 0; i < moves.length; i++) {
-      if (moves[i][2] === bestScore) return moves[i];
-    }
+    return bestScore;
   } else {
     let bestScore = Infinity;
-    let moves = [];
-    for (let move of allAvailableMoves) {
-      const testBoard = Piece.copyBoard(board);
+    for (const move of moves) {
       const [piece, [row, col]] = move;
-      testBoard[piece.getPosition()[0]][piece.getPosition()[1]] = null;
-      testBoard[row][col] = piece.clone().move([row, col]);
-      moves.push([piece, [row, col], minimax(testBoard, depth - 1, isMaximizing)[2]]);
-      if (minimax(testBoard, depth - 1, isMaximizing)[2] < bestScore) bestScore = minimax(testBoard, depth - 1, isMaximizing)[2];
+      const oldPiece = board[row][col];
+      board[row][col] = piece;
+      board[piece.row][piece.col] = null;
+      piece.row = row;
+      piece.col = col;
+      const score = minimax(board, depth - 1, true);
+      bestScore = Math.min(score, bestScore);
+      board[row][col] = oldPiece;
+      board[piece.row][piece.col] = piece;
+      piece.row = piece.row;
+      piece.col = piece.col;
     }
-
-    for (let i = 0; i < moves.length; i++) {
-      if (moves[i][2] === bestScore) return moves[i];
-    }
+    return bestScore;
   }
 }
 
