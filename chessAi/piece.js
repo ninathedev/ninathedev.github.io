@@ -3,6 +3,8 @@ class Piece {
     this.type = type;
     this.isWhite = isWhite;
     this.position = position;
+    this.row = this.position[0];
+    this.col = this.position[1];
   }
 
   getType() {
