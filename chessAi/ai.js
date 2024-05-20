@@ -4,7 +4,7 @@ const scores = {
   bishop: 3,
   rook: 5,
   queen: 1000,
-  king: 0
+  king: 1000000
 };
 
 function getBestMove(board, depth, isMaximizing) {
@@ -15,8 +15,7 @@ function getBestMove(board, depth, isMaximizing) {
   for (let i = 0; i < moves.length; i++) {
     const move = moves[i];
     const newBoard = makeMove(board, move);
-    const value = minimax(newBoard, depth - 1, !isMaximizing, -Infinity, Infinity);
-    // console.log(value, bestValue);
+    const value = minimax(newBoard, depth, !isMaximizing, -Infinity, Infinity);
     if (isMaximizing ? value > bestValue : value < bestValue) {
       bestValue = value;
       bestMove = move;
@@ -103,7 +102,7 @@ function evaluateBoard(board) {
       const piece = board[row][col];
       if (piece) {
         const pieceScore = scores[piece.getType()];
-        score += piece.isWhite ? pieceScore : -pieceScore;
+        score += piece.isWhite ? -pieceScore : pieceScore;
       }
     }
   }
@@ -136,14 +135,12 @@ function minimax(board, depth, isMaximizing, alpha, beta) {
   const moves = getAllAvailableMoves(board, isMaximizing);
   let bestValue;
 
-  if (isMaximizing) {
+  if (!isMaximizing) {
     bestValue = -Infinity;
-    for (let i = 0; i < moves.length; i++) {
-      const move = moves[i];
+    for (let move of moves) {
       const newBoard = makeMove(board, move);
       const value = minimax(newBoard, depth - 1, !isMaximizing, alpha, beta);
       bestValue = Math.max(bestValue, value);
-      console.log(bestValue);
       alpha = Math.max(alpha, value);
       if (beta <= alpha) {
         break; // Alpha-beta pruning
@@ -151,8 +148,7 @@ function minimax(board, depth, isMaximizing, alpha, beta) {
     }
   } else {
     bestValue = Infinity;
-    for (let i = 0; i < moves.length; i++) {
-      const move = moves[i];
+    for (let move of moves) {
       const newBoard = makeMove(board, move);
       const value = minimax(newBoard, depth - 1, !isMaximizing, alpha, beta);
       bestValue = Math.min(bestValue, value);
