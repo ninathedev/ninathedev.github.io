@@ -4,7 +4,7 @@ const scores = {
   bishop: 3,
   rook: 5,
   queen: 1000,
-  king: 100000000000
+  king: 100000
 };
 
 function getBestMove(board, depth, isMaximizing) {
