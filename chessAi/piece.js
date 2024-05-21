@@ -352,5 +352,37 @@ class Piece {
   
     return false; // King is not checked
   }
+
+  static isKingChecked(board, isWhite) {
+    // Find the position of the king
+    let kingPosition;
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const piece = board[row][col];
+        if (piece === null) continue;
+        if (piece.isWhite == isWhite && piece.type == 5) {
+          kingPosition = [row, col];
+          break;
+        }
+      }
+    }
+  
+    // Check if any opponent's piece threatens the king
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        const piece = board[i][j];
+        if (piece && piece.isWhite !== isWhite && piece.type !== 5) {
+          const availableMoves = piece.getAvailableMoves(board, true);
+          for (const move of availableMoves) {
+            if (move[0] === kingPosition[0] && move[1] === kingPosition[1]) {
+              return true; // King is checked
+            }
+          }
+        }
+      }
+    }
+  
+    return false; // King is not checked
+  }
   
 }
