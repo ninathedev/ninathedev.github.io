@@ -1,4 +1,5 @@
-function getBestMove(board, depth, isMaximizing)  const moves = getAllAvailableMoves(board, isMaximizing);
+function getBestMove(board, depth, isMaximizing) { 
+  const moves = getAllAvailableMoves(board, isMaximizing);
   let bestValue = isMaximizing ? -Infinity : Infinity;
   let bestMove;
 
