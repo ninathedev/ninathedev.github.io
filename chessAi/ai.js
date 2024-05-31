@@ -45,22 +45,19 @@ function gameIsOver(board) {
   return false;
 }
 
-function isCheckmate(board, currentPlayer) {
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
-      let piece = board[row][col];
-      if (piece && piece.color === currentPlayer) {
-        let moves = piece.getAvailableMoves(board);
-        for (let move of moves) {
-          let newBoard = makeMove(board, piece, move);
-          if (!isInCheck(newBoard, currentPlayer)) {
-            return false;
-          }
-        }
-      }
-    }
+function isCheckmate(board) {
+  // TODO: Implement checkmate logic
+  // Return true if the current player is in checkmate, otherwise return false
+  // You can use the existing functions to check for checkmate conditions
+  const isWhite = true; // Assuming the current player is white
+  const moves = getAllAvailableMoves(board, isWhite);
+  
+  // Check if there are no available moves for the current player
+  if (moves.length === 0) {
+    return true;
   }
-  return true;
+  
+  return false;
 }
 
 function isStalemate(board) {
@@ -170,7 +167,6 @@ function makeMove(board, move) {
   const newBoard = Piece.copyBoard(board);
 
   // Get the start and end positions from the move
-  console.log(move);
   const [start, end] = move;
 
   // Get the piece from the start position
