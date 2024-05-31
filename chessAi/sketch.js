@@ -1,14 +1,4 @@
-const scores = {
-  pawn: 1,
-  knight: 3,
-  bishop: 3,
-  rook: 5,
-  queen: 1000,
-  king: 1000000
-};
-
-function getBestMove(board, depth, isMaximizing) {
-  const moves = getAllAvailableMoves(board, isMaximizing);
+function getBestMove(board, depth, isMaximizing)  const moves = getAllAvailableMoves(board, isMaximizing);
   let bestValue = isMaximizing ? -Infinity : Infinity;
   let bestMove;
 
