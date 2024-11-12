@@ -16,7 +16,10 @@ function getBestMove(board, depth, isMaximizing) {
     const move = moves[i];
     const newBoard = makeMove(board, move);
     const value = minimax(newBoard, depth, !isMaximizing, -Infinity, Infinity);
-    if (isMaximizing ? value > bestValue : value < bestValue) {
+    if (isMaximizing && value > bestValue) {
+      bestValue = value;
+      bestMove = move;
+    } else if (!isMaximizing && value < bestValue) {
       bestValue = value;
       bestMove = move;
     }
@@ -150,7 +153,7 @@ function minimax(board, depth, isMaximizing, alpha, beta) {
     bestValue = Infinity;
     for (let move of moves) {
       const newBoard = makeMove(board, move);
-      const value = minimax(newBoard, depth - 1, !isMaximizing, alpha, beta);
+      const value = minimax(newBoard, depth - 1, isMaximizing, alpha, beta);
       bestValue = Math.min(bestValue, value);
       beta = Math.min(beta, value);
       if (beta <= alpha) {
